@@ -38,3 +38,35 @@ post '/expose' do
 
   output
 end
+
+post '/webhook' do
+  output = {
+    'ENV' => request.env,
+    'Params' => params,
+    'Body' => @body
+  }
+  output = JSON.pretty_generate(output)
+  logger.info(output)
+
+  response = {
+    "ResultCode" => 0,
+    "DebugMessage" => "OK"
+  }
+
+  if params['code'] do
+    response['ResultCode'] = params['code']
+  end
+  
+  if params['debug'] do
+    response["DebugMessage"] = params['debug']
+  end
+
+  if params['data'] do
+    response["Data"] = params['data']
+  end
+
+  logger.info("=== Response")
+  logger.info(response)
+
+  JSON.generate(response)
+end
