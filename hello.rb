@@ -65,6 +65,11 @@ post '/webhook' do
     response["Data"] = params['data']
   end
 
+  response['data'] = {
+    'dataKey' => 'dataValue',
+    'dataKey2' => 'dataValue2'
+  }
+
   logger.info("=== Response")
   logger.info(response)
 
