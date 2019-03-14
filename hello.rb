@@ -53,15 +53,15 @@ post '/webhook' do
     "DebugMessage" => "OK"
   }
 
-  if params['code'] do
+  if params['code'] then
     response['ResultCode'] = params['code']
   end
   
-  if params['debug'] do
+  if params['debug'] then
     response["DebugMessage"] = params['debug']
   end
 
-  if params['data'] do
+  if params['data'] then
     response["Data"] = params['data']
   end
 
