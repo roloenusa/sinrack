@@ -123,6 +123,7 @@ post '/webhook/create' do
     logger.info("#{fileName}: Reading from file ");
     file = File.open(fileName, 'r')
     response['ChannelState']['BinaryHistory'] = file.read.strip
+    response['ChannelState']['ChannelHistoryCapacity'] = 100
   end
 
   generateResponse(response)
