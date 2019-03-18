@@ -12,6 +12,13 @@ before do
   end
 end
 
+def generateResponse(response)
+  logger.info("=== Response")
+  logger.info(response)
+
+  JSON.generate(response)
+end
+
 get '/' do
   "Hello World!"
 end
@@ -70,8 +77,55 @@ post '/webhook' do
     'dataKey2' => 'dataValue2'
   }
 
-  logger.info("=== Response")
-  logger.info(response)
-
-  JSON.generate(response)
+  generateResponse(response)
 end
+
+post '/webhook/destroy' do
+  output = {
+    'ENV' => request.env,
+    'Params' => params,
+    'Body' => @body
+  }
+  output = JSON.pretty_generate(output)
+  logger.info(output)
+
+  response = {
+    "ResultCode" => 0,
+  }
+
+  if File.exists?("binaryHistory.txt") then
+    file = File.open('binaryHistory.txt', 'w')
+  else
+    file = File.new("binaryHistory.txt", 'w')
+  end
+
+  if bh = @body.dig('ChannelState', 'BinaryHistory') then
+    file.puts(bh)
+  end
+  file.close
+
+  generateResponse(response)
+end
+
+post '/webhook/create' do
+  output = {
+    'ENV' => request.env,
+    'Params' => params,
+    'Body' => @body
+  }
+  output = JSON.pretty_generate(output)
+  logger.info(output)
+
+  response = {
+    "ResultCode" => 0,
+    "ChannelState" => {}
+  }
+
+  if File.exists?("binaryHistory.txt") then
+    file = File.open('binaryHistory.txt', 'r')
+    response['ChannelState']['BinaryHistory'] = file.read
+  end
+
+  generateResponse(response)
+end
+
