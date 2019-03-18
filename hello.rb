@@ -74,7 +74,7 @@ post '/webhook' do
 
   response['data'] = {
     'dataKey' => 'dataValue',
-    'dataKey2' => 'dataValue2'
+    'dataKey2' => @body.dig('Message', 'dataMessage')
   }
 
   generateResponse(response)
