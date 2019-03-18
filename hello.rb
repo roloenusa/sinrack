@@ -82,7 +82,7 @@ end
 
 post '/webhook/destroy' do
   output = {
-    'ENV' => request.env,
+    # 'ENV' => request.env,
     'Params' => params,
     'Body' => @body
   }
@@ -93,8 +93,10 @@ post '/webhook/destroy' do
     "ResultCode" => 0,
   }
 
-  file = File.new("binaryHistory.txt", 'w')
+  fileName = "binaryHistory#{@body['ChannelName']}.txt"
+  file = File.new(fileName, 'w')
   if bh = @body.dig('ChannelState', 'BinaryHistory') then
+    logger.info("#{fileName}: Writting to file ");
     file.puts(bh)
   end
   file.close
@@ -104,7 +106,7 @@ end
 
 post '/webhook/create' do
   output = {
-    'ENV' => request.env,
+    # 'ENV' => request.env,
     'Params' => params,
     'Body' => @body
   }
@@ -116,9 +118,11 @@ post '/webhook/create' do
     "ChannelState" => {}
   }
 
-  if File.exists?("binaryHistory.txt") then
-    file = File.open('binaryHistory.txt', 'r')
-    response['ChannelState']['BinaryHistory'] = file.read
+  fileName = "binaryHistory#{@body['ChannelName']}.txt"
+  if File.exists?(fileName) then
+    logger.info("#{fileName}: Reading from file ");
+    file = File.open(fileName, 'r')
+    response['ChannelState']['BinaryHistory'] = file.read.strip
   end
 
   generateResponse(response)
