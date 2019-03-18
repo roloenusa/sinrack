@@ -93,12 +93,7 @@ post '/webhook/destroy' do
     "ResultCode" => 0,
   }
 
-  if File.exists?("binaryHistory.txt") then
-    file = File.open('binaryHistory.txt', 'w')
-  else
-    file = File.new("binaryHistory.txt", 'w')
-  end
-
+  file = File.new("binaryHistory.txt", 'w')
   if bh = @body.dig('ChannelState', 'BinaryHistory') then
     file.puts(bh)
   end
