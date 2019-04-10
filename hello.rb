@@ -20,7 +20,8 @@ def generateResponse(response)
 end
 
 get '/' do
-  "Hello World!"
+  "Hello World!" + 
+  "Dir: " + __dir__
 end
 
 get '/expose' do
