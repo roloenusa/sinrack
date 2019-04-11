@@ -20,8 +20,13 @@ def generateResponse(response)
 end
 
 get '/' do
+  files = {}
+  Dir.entries(".").each do |f|
+    files[f] = File.stat(f).size
+  end
   "Hello World!" + 
-  "Dir: " + __dir__
+  "Dir: " + __dir__ +
+  JSON.pretty_generate(files)
 end
 
 get '/expose' do
